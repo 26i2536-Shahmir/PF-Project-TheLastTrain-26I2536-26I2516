@@ -4,12 +4,13 @@
 #include "state.h"
 
 // Access control & puzzle validation without structs
-bool canUseLift1(int fromFloor, int toFloor);
-bool canUseLift2(int fromFloor, int toFloor, bool lift2Operational, int emergencyTripsLeft);
+bool islift2floor(int floor);
+bool canuselift1(int fromfloor, int tofloor);
+bool canuselift2(int fromfloor, int tofloor, bool lift2operational, int emergencytripsleft);
 
-bool unlockFloor3Door(const char inventory[MAX_INVENTORY_CAPACITY], int inventoryCount);
-bool installFuseControlPanel(char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount,
+bool unlockfloor3door(const char inventory[MAX_INVENTORY_CAPACITY], int inventorycount);
+bool installfusecontrolpanel(char inventory[MAX_INVENTORY_CAPACITY], int& inventorycount,
                              bool objectives[NUM_OBJECTIVES], int& score);
-bool verifyCabinetCode(const char* enteredCode, const bool objectives[NUM_OBJECTIVES]);
+bool verifycabinetcode(const char* enteredcode, const bool objectives[NUM_OBJECTIVES]);
 
 #endif // SWITCHES_H

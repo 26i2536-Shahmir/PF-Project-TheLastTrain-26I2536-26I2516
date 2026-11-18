@@ -4,19 +4,19 @@
 #include "state.h"
 
 // Movement validation, connectivity & resource adjustments
-bool isDirectlyConnected(int fromF, int fromR, int toF, int toR,
-                         const char horizontalConn[NUM_FLOORS][ROOMS_PER_FLOOR - 1],
-                         char& outConnType);
+bool isdirectlyconnected(int fromf, int fromr, int tof, int tor,
+                         const char horizontalconn[NUM_FLOORS][ROOMS_PER_FLOOR - 1],
+                         char& outconntype);
 
-bool canTraverse(int targetFloor, int targetRoom, char connType,
-                 const char inventory[MAX_INVENTORY_CAPACITY], int inventoryCount,
-                 int emergencyTripsLeft, bool lift2Operational);
+bool cantraverse(int targetfloor, int targetroom, char conntype,
+                 const char inventory[MAX_INVENTORY_CAPACITY], int inventorycount,
+                 int emergencytripsleft, bool lift2operational);
 
-void applyResourceDelta(int& energy, int& time, int deltaEnergy, int deltaTime);
-void applyScoreDelta(int& score, int deltaScore);
+void applyresourcedelta(int& energy, int& time, int deltaenergy, int deltatime);
+void applyscoredelta(int& score, int deltascore);
 
-bool hasItem(const char inventory[MAX_INVENTORY_CAPACITY], int inventoryCount, char itemSymbol);
-bool addItem(char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount, char itemSymbol);
-bool removeItem(char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount, char itemSymbol);
+bool hasitem(const char inventory[MAX_INVENTORY_CAPACITY], int inventorycount, char itemsymbol);
+bool additem(char inventory[MAX_INVENTORY_CAPACITY], int& inventorycount, char itemsymbol);
+bool removeitem(char inventory[MAX_INVENTORY_CAPACITY], int& inventorycount, char itemsymbol);
 
 #endif // PHYSICS_H
