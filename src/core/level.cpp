@@ -485,7 +485,8 @@ bool loadinitialstate(const char* filename, int& playerfloor, int& playerroom, i
             continue;
         if(!splitkeyvalue(line, key, value) || !usesetting(key, value, playerfloor, playerroom, energy, time, score, inventory, inventorycount, objectives))
         {
-            cerr << "State file error on line " << linenumber << ": " << line << "\n";
+            c
+            err << "State file error on line " << linenumber << ": " << line << "\n";
             return false;
         }
     }
@@ -504,4 +505,78 @@ bool loadinitialstate(const char* filename, int& playerfloor, int& playerroom, i
     }
     return true;
 }
+static int markreachablerooms (int startfloor , int startroom , const char horizontalconn[NUM_FLOORS][ROOMS_PER_FLOOR - 1 ], bool lockeddooropen , bool lift2open, bool visited[NUM_FLOORS][ROOMS_PER_FLOOR]){
+for(int f = 0 ; f<NUM_FLOORS ; f++)
+    for(int r = 0 ; r < ROOMS_PER_FLOOR; r++ ){
+        visited[f][r] = false;
 
+    }
+    if(!isvalidroom(startfloor , startroom))
+    return 0;
+
+    visited[startfloor -1 ][startroom - 1 ] = true ;
+    int count = 1 ;
+    bool foundnew = true;
+    while(foundnew ){
+        foundnew = false;
+        for (int fromf = 1 ; fromf <= NUM_FLOORS; fromf ++)
+        for(int fromr = 1 ; fromr <= ROOMS_PER_FLOOR; fromr++){
+            if(!visited[fromf - 1][fromr -1])
+                continue;
+        for(int tof = 1 ; tof <= NUM_FLOORS; tof ++)
+        for(int tor = 1 ; tor<= ROOMS_PER_FLOOR; tor ++){
+            char way = CONN_NONE;
+            if(visited[tof -1 ][tor - 1])
+            continue;
+            if(!isdirectlyconnected(fromf , fromr , tof , tor , horizontalconn , way))
+            continue;
+            if(way == CONN_LOCKED_DOOR && !lockeddooropen)
+            continue;
+            if(way == CONN_LIFT2 && !lift2open)
+            continue;
+            visited[tof -1 ][tor - 1 ] = true ;
+            count ++;
+            foundnew = true;
+
+        }
+     }
+        
+    }
+    return count;
+}
+int countreachablerooms(int startfloor , int startroom , const char horizontalconn[NUM_FLOORS][ROOMS_PER_FLOOR - 1 ]){
+    bool visited[NUM_FLOORS][ROOMS_PER_FLOOR];
+    return markreachablerooms(startfloor , startroom, horizontalconn , true , true , visited);
+}
+bool validatestartingroom(int startfloor , int startroom , const char horizontalconn[NUM_FLOORS][ROOMS_PER_FLOOR -1 ]){
+    if(!isvalidroom(startfloor , startroom))
+    return false;
+return countreachablerooms(startfloor , startroom , horizontalconn) == TOTAL_ROOMS;
+}
+static bool iteminmarkedroom(char symbol , const bool visited[NUM_FLOORS][ROOMS_PER_FLOOR], const char roomentities[NUM_FLOORS][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM], const int entitycounts[NUM_FLOORS][ROOMS_PER_FLOOR]){
+    for(int f = 0 ; f < NUM_FLOORS ; f++)
+    for(int r = 0; r < ROOMS_PER_FLOOR; r++)
+for(int e = 0 ; visited[f][r] && e < entitycounts[f][r];e++)
+if(roomentities[f][r][e]== symbol )
+return true;
+
+return false;    
+}
+bool isstartroomplayable(int startfloor , int startroom ,const char horizontalconn[NUM_FLOORS][ROOMS_PER_FLOOR - 1], const char roomentities[NUM_FLOORS][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM], const int entitycounts[NUM_FLOORS][ROOMS_PER_FLOOR]){
+    bool visited[NUM_FLOORS][ROOMS_PER_FLOOR];
+    bool dooropen = false , liftopen = false , somethingopened = true;
+int count = 0;
+while(somethingopened){
+    somethingopened = false ;
+    count = markreachablerooms(startfloor , startroom , horizontalconn, dooropen , liftopen ,visited){
+        if(!dooropen && iteminmarkedroom(ENT_MASTER_KEY , visited , roomentities , entitycounts))
+        dooropen = somethingopened = true ;
+    bool card = iteminmarkedroom(ENT_EMERGENCY_CARD , visited , roomentities , entitycounts);
+    bool repair = iteminmarkedroom(ENT_FUSE , visited , roomentities , entitycounts) && iteminmarkedroom(ENT_CONTROL_PANEL, visited , roomentities , entitycounts) && iteminmarkedroom(ENT_LIFT_PASS, visited , roomentities , entitycounts);
+if(!liftopen && (card || repair))
+liftopen = somethingopened = true ;
+
+    }
+}
+return count == TOTAL_ROOMS;
+}
